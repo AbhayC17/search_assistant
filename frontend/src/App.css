@@ -1,0 +1,69 @@
+.app {
+  min-height: 100vh;
+  background: #f4f6f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+.card {
+  width: 720px;
+  background: white;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+h1 {
+  margin-bottom: 8px;
+}
+
+p {
+  color: #444;
+}
+
+label {
+  display: block;
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+select,
+textarea,
+input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+textarea {
+  resize: vertical;
+}
+
+button {
+  margin-top: 18px;
+  padding: 12px 20px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #999;
+}
+
+.answer {
+  margin-top: 25px;
+  padding: 20px;
+  background: #f1f5f9;
+  border-radius: 10px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
