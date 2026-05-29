@@ -16,11 +16,7 @@ const upload = multer({
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || "http://127.0.0.1:8000";
 
-app.use(
-  cors({
-    origin: FRONTEND_URL,
-  })
-);
+app.use(cors());
 
 app.use(express.json());
 
