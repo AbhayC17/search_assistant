@@ -4,7 +4,7 @@ import "./App.css";
 
 function App() {
   const [question, setQuestion] = useState("");
-  const [mode, setMode] = useState("general");
+  const [mode, setMode] = useState("web");
   const [file, setFile] = useState(null);
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,8 +17,8 @@ function App() {
       return;
     }
 
-    if ((mode === "pdf" || mode === "both") && !file) {
-      alert("Please upload a PDF for this mode");
+    if (mode === "pdf" && !file) {
+      alert("Please upload a PDF for PDF Study mode");
       return;
     }
 
@@ -37,44 +37,57 @@ function App() {
       const response = await axios.post(`${API_URL}/api/ask`, formData);
 
       setAnswer(response.data.answer);
-   } catch (error) {
-  console.error("Full error:", error);
+    } catch (error) {
+      console.error("Full error:", error);
 
-  if (error.response) {
-    console.error("Backend response:", error.response.data);
-    setAnswer(JSON.stringify(error.response.data, null, 2));
-  } else {
-    setAnswer(error.message);
-  }
-};
+      if (error.response) {
+        setAnswer(JSON.stringify(error.response.data, null, 2));
+      } else {
+        setAnswer("Something went wrong. Check backend connection.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="app">
       <div className="card">
-        <h1>AI Research Assistant</h1>
-        <p>React + Node.js + FastAPI + Groq</p>
+        <div className="badge">AI Powered Research System</div>
+
+        <h1>AI Search Assistant</h1>
+
+        <p>
+          Your intelligent gateway to web research, documents, and instant answers
+        </p>
 
         <label>Choose Mode</label>
         <select value={mode} onChange={(e) => setMode(e.target.value)}>
-          <option value="general">General AI Answer</option>
-          <option value="web">Web Search Answer</option>
-          <option value="pdf">PDF RAG Answer</option>
-          <option value="both">Web Search + PDF RAG</option>
+          <option value="web">Web Search</option>
+          <option value="pdf">PDF Study</option>
         </select>
 
+        <label>Your Question</label>
         <textarea
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          placeholder="Ask your question..."
+          placeholder={
+            mode === "web"
+              ? "Example: What are the latest trends in AI?"
+              : "Example: Summarize this PDF in simple words."
+          }
           rows="5"
         />
 
-        {(mode === "pdf" || mode === "both") && (
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
+        {mode === "pdf" && (
+          <>
+            <label>Upload PDF</label>
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
+          </>
         )}
 
         <button onClick={askAI} disabled={loading}>

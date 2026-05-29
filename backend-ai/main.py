@@ -104,7 +104,7 @@ def retrieve_relevant_chunks(question: str, text: str, top_k: int = 4) -> str:
 @app.post("/ask")
 async def ask_ai(
     question: str = Form(...),
-    mode: str = Form("general"),
+    mode: str = Form("web"),
     file: UploadFile | None = File(None)
 ):
     if not os.getenv("GROQ_API_KEY"):
@@ -116,14 +116,14 @@ async def ask_ai(
     web_context = ""
     pdf_context = ""
 
-    if mode in ["web", "both"]:
+    if mode == "web":
         web_context = search_web(question)
 
-    if mode in ["pdf", "both"]:
+    elif mode == "pdf":
         if file is None:
             raise HTTPException(
                 status_code=400,
-                detail="PDF file is required for PDF mode"
+                detail="PDF file is required for PDF Study mode"
             )
 
         file_bytes = await file.read()
@@ -137,10 +137,19 @@ async def ask_ai(
 
         pdf_context = retrieve_relevant_chunks(question, pdf_text)
 
+    else:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid mode. Use either 'web' or 'pdf'."
+        )
+
     prompt = f"""
 You are a helpful AI research assistant.
 
 Answer the user's question clearly and accurately.
+
+Selected Mode:
+{mode}
 
 Question:
 {question}
@@ -152,10 +161,10 @@ PDF Context:
 {pdf_context}
 
 Instructions:
-- If PDF context is available, use it as the main source.
-- If web context is available, use it for extra support.
-- If no context is available, answer using general knowledge.
-- Keep the answer structured, detailed and easy to understand.
+- If mode is web, answer using the web search context.
+- If mode is pdf, answer using only the PDF context.
+- Keep the answer structured, detailed, and easy to understand.
+- If the available context is not enough, clearly mention that the source does not provide enough information.
 """
 
     response = llm.invoke(prompt)
