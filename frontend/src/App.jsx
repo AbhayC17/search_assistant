@@ -37,13 +37,16 @@ function App() {
       const response = await axios.post(`${API_URL}/api/ask`, formData);
 
       setAnswer(response.data.answer);
-    } catch (error) {
-      console.error(error);
-      setAnswer("Something went wrong. Check backend connection.");
-    } finally {
-      setLoading(false);
-    }
-  };
+   } catch (error) {
+  console.error("Full error:", error);
+
+  if (error.response) {
+    console.error("Backend response:", error.response.data);
+    setAnswer(JSON.stringify(error.response.data, null, 2));
+  } else {
+    setAnswer(error.message);
+  }
+};
 
   return (
     <div className="app">
