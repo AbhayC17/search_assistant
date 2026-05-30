@@ -1,11 +1,13 @@
 .env
+.env.local
 **/.env
-
-venv/
-**/venv/
+**/.env.local
 
 node_modules/
 **/node_modules/
+
+venv/
+**/venv/
 
 dist/
 __pycache__/
