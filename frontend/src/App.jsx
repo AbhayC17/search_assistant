@@ -9,7 +9,14 @@ function App() {
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const API_URL = import.meta.env.VITE_NODE_API_URL || "http://localhost:5000";
+  const handleModeChange = (e) => {
+    setMode(e.target.value);
+    setAnswer("");
+
+    if (e.target.value === "web") {
+      setFile(null);
+    }
+  };
 
   const askAI = async () => {
     if (!question.trim()) {
@@ -30,11 +37,20 @@ function App() {
       formData.append("question", question);
       formData.append("mode", mode);
 
+      let sessionId = localStorage.getItem("ai_search_session_id");
+
+      if (!sessionId) {
+        sessionId = crypto.randomUUID();
+        localStorage.setItem("ai_search_session_id", sessionId);
+      }
+
+      formData.append("session_id", sessionId);
+
       if (file) {
         formData.append("file", file);
       }
 
-      const response = await axios.post(`${API_URL}/api/ask`, formData);
+      const response = await axios.post("/api/ask", formData);
 
       setAnswer(response.data.answer);
     } catch (error) {
@@ -43,7 +59,7 @@ function App() {
       if (error.response) {
         setAnswer(JSON.stringify(error.response.data, null, 2));
       } else {
-        setAnswer("Something went wrong. Check backend connection.");
+        setAnswer("Something went wrong. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -55,14 +71,12 @@ function App() {
       <div className="card">
         <div className="badge">AI Powered Research System</div>
 
-        <h1>AI Search Assistant</h1>
+        <h1>AI Search by Abhay</h1>
 
-        <p>
-          Your intelligent gateway to web research, documents, and instant answers
-        </p>
+        <p>Search smarter. Think faster. Discover deeper.</p>
 
         <label>Choose Mode</label>
-        <select value={mode} onChange={(e) => setMode(e.target.value)}>
+        <select value={mode} onChange={handleModeChange}>
           <option value="web">Web Search</option>
           <option value="pdf">PDF Study</option>
         </select>
@@ -87,6 +101,12 @@ function App() {
               accept="application/pdf"
               onChange={(e) => setFile(e.target.files[0])}
             />
+
+            {file && (
+              <p className="file-name">
+                Selected file: {file.name}
+              </p>
+            )}
           </>
         )}
 
