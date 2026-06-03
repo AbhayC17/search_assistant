@@ -159,7 +159,7 @@ Through this project, I learned:
 
 ## Demo
 
-Live Demo: [Add your deployed link here](https://search-assistantbyabhay.vercel.app/)  
+Live Demo: https://search-assistantbyabhay.vercel.app/ 
 GitHub Repository: https://github.com/AbhayC17/AI_Research
 
 ## Author
