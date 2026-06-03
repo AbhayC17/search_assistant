@@ -160,7 +160,7 @@ Through this project, I learned:
 ## Demo
 
 Live Demo: https://search-assistantbyabhay.vercel.app/ 
-GitHub Repository: https://github.com/AbhayC17/AI_Research
+GitHub Repository: https://github.com/AbhayC17/search_assistant
 
 ## Author
 
